@@ -1,0 +1,58 @@
+@import "tailwindcss";
+
+:root {
+  --color-alcateia-black: #08080a;
+  --color-alcateia-dark: #121216;
+  --color-alcateia-red: #e51e2b;
+  --color-alcateia-crimson: #ff2a3a;
+  --color-alcateia-charcoal: #1e1e24;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: #08080a;
+  color: #f8fafc;
+  overflow-x: hidden;
+}
+
+.font-sports {
+  font-family: 'Chakra Petch', 'Inter', sans-serif;
+}
+
+@keyframes pulseGlowRed {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(229, 30, 43, 0.35), inset 0 0 15px rgba(229, 30, 43, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(255, 42, 58, 0.75), inset 0 0 25px rgba(229, 30, 43, 0.35);
+  }
+}
+
+.animate-pulse-red {
+  animation: pulseGlowRed 2.2s infinite ease-in-out;
+}
+
+@keyframes redDash {
+  to {
+    stroke-dashoffset: -120;
+  }
+}
+
+.speed-line-red {
+  stroke-dasharray: 10 18;
+  animation: redDash 0.8s linear infinite;
+}
+
+/* Print styles for check-in sheet / PDF print */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+}

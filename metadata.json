@@ -1,0 +1,6 @@
+{
+  "name": "Treinão Solidário Alcateia — Novembro Azul",
+  "description": "Site oficial de inscrição e gestão para o Treinão Solidário Alcateia em prol do Asilo São Cristóvão em Laranjal Paulista - SP.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
