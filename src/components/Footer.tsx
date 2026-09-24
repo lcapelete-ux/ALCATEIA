@@ -1,5 +1,6 @@
 import React from 'react';
 import { Heart, MapPin, Milk, Lock, Cloud, Flame } from 'lucide-react';
+import runnerWolfEmblem from '../assets/images/runner_wolf_emblem_1790261682882.jpg';
 
 interface FooterProps {
   onOpenAdmin: () => void;
@@ -14,8 +15,13 @@ export const Footer: React.FC<FooterProps> = ({ onOpenAdmin, onOpenNetlifyGuide 
           {/* Col 1: Brand & Bio */}
           <div className="md:col-span-2 space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-600 to-red-950 border border-red-500/70 flex items-center justify-center shadow-md shadow-red-950 shrink-0">
-                <Flame className="w-5 h-5 text-white" />
+              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-red-600 to-red-950 border border-red-500/70 overflow-hidden flex items-center justify-center shadow-md shadow-red-950 shrink-0">
+                <img
+                  src={runnerWolfEmblem}
+                  alt="Corredor e Lobo"
+                  referrerPolicy="no-referrer"
+                  className="w-full h-full object-cover"
+                />
               </div>
               <div className="flex flex-col">
                 <span className="font-sports font-black italic uppercase text-[10px] tracking-[0.18em] text-[#B8CADC] leading-none">

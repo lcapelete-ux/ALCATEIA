@@ -1,6 +1,7 @@
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import { Participant, RegistrationFormData, EventStats } from '../types';
+import { FirebaseService } from './firebase';
 
 const STORAGE_KEY = 'alcateia_treinao_novembro_azul_2024';
 const MAX_KITS = 150;
@@ -355,13 +356,31 @@ export const StorageService = {
 
     const updated = [newParticipant, ...list];
     this.saveParticipants(updated);
+
+    // Sync to Cloud Firestore asynchronously
+    FirebaseService.saveParticipant(newParticipant).catch((err) => {
+      console.warn('Could not sync new athlete to Firebase:', err);
+    });
+
     return newParticipant;
+  },
+
+  syncFromFirebase(remoteList: Participant[]): void {
+    if (remoteList && remoteList.length > 0) {
+      this.saveParticipants(remoteList);
+    }
   },
 
   updateParticipant(id: string, updates: Partial<Participant>): Participant[] {
     const list = this.getParticipants();
     const updated = list.map((p) => (p.id === id ? { ...p, ...updates } : p));
     this.saveParticipants(updated);
+
+    // Sync to Cloud Firestore
+    FirebaseService.updateParticipant(id, updates).catch((err) => {
+      console.warn('Could not sync update to Firebase:', err);
+    });
+
     return updated;
   },
 
@@ -369,25 +388,61 @@ export const StorageService = {
     const list = this.getParticipants();
     const updated = list.filter((p) => p.id !== id);
     this.saveParticipants(updated);
+
+    // Sync deletion to Cloud Firestore
+    FirebaseService.deleteParticipant(id).catch((err) => {
+      console.warn('Could not sync deletion to Firebase:', err);
+    });
+
     return updated;
   },
 
   toggleMilkDelivered(id: string): Participant[] {
     const list = this.getParticipants();
-    const updated = list.map((p) => (p.id === id ? { ...p, milkDelivered: !p.milkDelivered } : p));
+    let newStatus = false;
+    const updated = list.map((p) => {
+      if (p.id === id) {
+        newStatus = !p.milkDelivered;
+        return { ...p, milkDelivered: newStatus };
+      }
+      return p;
+    });
     this.saveParticipants(updated);
+
+    // Sync to Cloud Firestore
+    FirebaseService.updateParticipant(id, { milkDelivered: newStatus }).catch((err) => {
+      console.warn('Could not sync milk status to Firebase:', err);
+    });
+
     return updated;
   },
 
   toggleCheckIn(id: string): Participant[] {
     const list = this.getParticipants();
-    const updated = list.map((p) => (p.id === id ? { ...p, checkedIn: !p.checkedIn } : p));
+    let newStatus = false;
+    const updated = list.map((p) => {
+      if (p.id === id) {
+        newStatus = !p.checkedIn;
+        return { ...p, checkedIn: newStatus };
+      }
+      return p;
+    });
     this.saveParticipants(updated);
+
+    // Sync to Cloud Firestore
+    FirebaseService.updateParticipant(id, { checkedIn: newStatus }).catch((err) => {
+      console.warn('Could not sync check-in to Firebase:', err);
+    });
+
     return updated;
   },
 
   resetToDefault(): Participant[] {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(INITIAL_PARTICIPANTS));
+    // Seed to Cloud Firestore as well
+    FirebaseService.seedInitialData(INITIAL_PARTICIPANTS).catch((err) => {
+      console.warn('Could not reset Cloud Firestore:', err);
+    });
     return INITIAL_PARTICIPANTS;
   },
 

@@ -183,9 +183,13 @@ export const AdminArea: React.FC<AdminAreaProps> = ({
                 <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-red-950 text-red-300 border border-red-500/30">
                   Academia Alcateia
                 </span>
+                <span className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-950 text-emerald-300 border border-emerald-500/40">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  Firebase Nuvem Ativo
+                </span>
               </div>
               <p className="text-xs text-slate-400">
-                Gestão de Inscritos, Exportação Excel/PDF, Entrega de Leite e Kits
+                Banco de Dados Firebase Firestore em Tempo Real · Exportação Excel/PDF · Entrega de Leite e Kits
               </p>
             </div>
           </div>

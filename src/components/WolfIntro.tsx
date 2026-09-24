@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Flame, FastForward, Milk, Sparkles } from 'lucide-react';
+import runnerWolfEmblem from '../assets/images/runner_wolf_emblem_1790261682882.jpg';
 
 interface WolfIntroProps {
   onComplete: () => void;
@@ -93,8 +94,13 @@ export const WolfIntro: React.FC<WolfIntroProps> = ({ onComplete }) => {
               className="absolute -inset-4 bg-red-600/30 blur-2xl rounded-full"
             />
 
-            <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-red-600 via-[#E51E2B] to-red-950 border-2 border-red-400/80 flex items-center justify-center shadow-[0_0_40px_rgba(229,30,43,0.7)]">
-              <Flame className="w-12 h-12 text-white animate-pulse" />
+            <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-red-600 via-[#E51E2B] to-red-950 border-2 border-red-400/80 overflow-hidden flex items-center justify-center shadow-[0_0_40px_rgba(229,30,43,0.7)]">
+              <img
+                src={runnerWolfEmblem}
+                alt="Corredor com Lobo Alcateia"
+                referrerPolicy="no-referrer"
+                className="w-full h-full object-cover"
+              />
             </div>
           </div>
 

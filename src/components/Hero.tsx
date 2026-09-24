@@ -8,7 +8,10 @@ import {
   Shirt,
   ArrowRight,
   Milk,
+  Zap,
 } from 'lucide-react';
+import runnerWolfHero from '../assets/images/runner_wolf_hero_1790261672533.jpg';
+import runnerWolfEmblem from '../assets/images/runner_wolf_emblem_1790261682882.jpg';
 
 interface HeroProps {
   kitsRemaining: number;
@@ -49,6 +52,32 @@ export const Hero: React.FC<HeroProps> = ({ kitsRemaining, totalRegistered }) =>
           <p className="font-sports text-lg sm:text-2xl font-bold uppercase text-red-300 tracking-wider">
             Treino Livre — Cada participante faz no seu ritmo!
           </p>
+        </div>
+
+        {/* Cinematic Photo Showcase: Corredor e Lobo */}
+        <div className="relative mx-auto max-w-3xl rounded-3xl overflow-hidden border border-red-500/40 shadow-[0_0_50px_rgba(229,30,43,0.35)] group bg-black/60 my-6">
+          <div className="relative aspect-[16/9] sm:aspect-[21/9] w-full overflow-hidden">
+            <img
+              src={runnerWolfHero}
+              alt="Corredor ao lado do lobo - Corrida da Alcateia"
+              referrerPolicy="no-referrer"
+              className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
+            />
+            {/* Dark gradient vignettes for seamless integration */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[#070709] via-transparent to-black/40" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-black/40" />
+
+            {/* Athletic badge overlay */}
+            <div className="absolute bottom-3 left-3 sm:bottom-4 sm:left-5 flex flex-wrap items-center gap-2">
+              <span className="px-3 py-1 rounded-full bg-[#E51E2B] text-white font-sports text-xs sm:text-sm font-black uppercase tracking-wider shadow-lg shadow-red-600/50 flex items-center gap-1.5">
+                <Flame className="w-3.5 h-3.5" />
+                <span>Espírito de Alcateia</span>
+              </span>
+              <span className="text-xs sm:text-sm text-slate-200 font-semibold drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] bg-black/60 px-3 py-1 rounded-full border border-white/10 backdrop-blur-md">
+                A força e união da matilha nas ruas · 08 de Novembro
+              </span>
+            </div>
+          </div>
         </div>
 
         {/* Event Key Data Badge Bar */}

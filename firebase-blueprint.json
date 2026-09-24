@@ -1,0 +1,123 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "entities": {
+    "Participant": {
+      "title": "Participant",
+      "description": "Athlete registered for the Alcateia Race event",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier of the registration"
+        },
+        "bibNumber": {
+          "type": "number",
+          "description": "Official runner chest bib number"
+        },
+        "fullName": {
+          "type": "string",
+          "description": "Athlete full legal name",
+          "minLength": 2,
+          "maxLength": 120
+        },
+        "gender": {
+          "type": "string",
+          "description": "Biological gender",
+          "enum": ["Masculino", "Feminino"]
+        },
+        "birthDate": {
+          "type": "string",
+          "description": "Birth date (YYYY-MM-DD)"
+        },
+        "age": {
+          "type": "number",
+          "description": "Athlete calculated age"
+        },
+        "city": {
+          "type": "string",
+          "description": "City of residence"
+        },
+        "state": {
+          "type": "string",
+          "description": "State of residence (2 letter UF)"
+        },
+        "team": {
+          "type": "string",
+          "description": "Running team or club"
+        },
+        "phone": {
+          "type": "string",
+          "description": "Contact phone or WhatsApp"
+        },
+        "cpf": {
+          "type": "string",
+          "description": "Masked or plain CPF document"
+        },
+        "shirtSize": {
+          "type": "string",
+          "description": "T-shirt size selected for race kit",
+          "enum": ["Baby Look P", "Baby Look M", "Baby Look G", "P", "M", "G", "GG", "XG"]
+        },
+        "modality": {
+          "type": "string",
+          "description": "Race distance modality",
+          "enum": ["Corrida Livre 5km", "Corrida Livre 8km"]
+        },
+        "price": {
+          "type": "number",
+          "description": "Registration fee amount in BRL"
+        },
+        "milkDonationAgreed": {
+          "type": "boolean",
+          "description": "Consent to donate 1L milk for asylum"
+        },
+        "milkDelivered": {
+          "type": "boolean",
+          "description": "Whether 1L milk carton was delivered"
+        },
+        "isKitEligible": {
+          "type": "boolean",
+          "description": "Whether registered in first 150 kits"
+        },
+        "paymentStatus": {
+          "type": "string",
+          "description": "Payment confirmation state",
+          "enum": ["Confirmado", "Pendente", "Cancelado"]
+        },
+        "paymentMethod": {
+          "type": "string",
+          "description": "Payment gateway or method (PIX, Cartão, Boleto)",
+          "enum": ["PIX", "Cartão", "Boleto", "Dinheiro"]
+        },
+        "checkedIn": {
+          "type": "boolean",
+          "description": "Presence checked in on race day"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "ISO timestamp of registration"
+        }
+      },
+      "required": [
+        "id",
+        "bibNumber",
+        "fullName",
+        "gender",
+        "birthDate",
+        "city",
+        "shirtSize",
+        "modality",
+        "price",
+        "milkDonationAgreed",
+        "paymentStatus",
+        "createdAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/participants/{participantId}": {
+      "schema": "Participant",
+      "description": "Collection of all race participants"
+    }
+  }
+}

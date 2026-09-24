@@ -15,11 +15,8 @@ import { NetlifyDeployGuideModal } from './components/NetlifyDeployGuideModal';
 import { WolfIntro } from './components/WolfIntro';
 import { RedWolfBackground } from './components/RedWolfBackground';
 import { Footer } from './components/Footer';
-import { BenefitsSection } from './components/BenefitsSection';
-import { SocialProofSection } from './components/SocialProofSection';
-import { FAQSection } from './components/FAQSection';
-import { WhatsAppButton } from './components/WhatsAppButton';
 import { StorageService } from './services/storage';
+import { FirebaseService } from './services/firebase';
 import { Participant, EventStats } from './types';
 
 export default function App() {
@@ -55,7 +52,26 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    // Initial local load for instantaneous UI rendering
     refreshData();
+
+    // Subscribe to live Firestore cloud database changes
+    const unsubscribe = FirebaseService.subscribeParticipants((remoteParticipants) => {
+      if (remoteParticipants && remoteParticipants.length > 0) {
+        StorageService.syncFromFirebase(remoteParticipants);
+        refreshData();
+      } else {
+        // If Firestore collection is empty, seed it with the initial participants
+        const localList = StorageService.getParticipants();
+        if (localList.length > 0) {
+          FirebaseService.seedInitialData(localList).catch(console.error);
+        }
+      }
+    });
+
+    return () => {
+      unsubscribe();
+    };
   }, [refreshData]);
 
   const handleIntroComplete = () => {
@@ -92,38 +108,27 @@ export default function App() {
       </div>
 
       {/* Main Content Area */}
-      <main className="relative z-10 flex-1">
-        <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 space-y-16 py-6">
-          {/* Hero Section */}
-          <Hero
-            kitsRemaining={stats.kitsRemaining}
-            totalRegistered={stats.total}
-          />
+      <main className="relative z-10 flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 space-y-16 py-6">
+        {/* Hero Section */}
+        <Hero
+          kitsRemaining={stats.kitsRemaining}
+          totalRegistered={stats.total}
+        />
 
-          {/* Social Proof Section */}
-          <SocialProofSection totalRegistered={stats.total} />
-
-          {/* Benefits Section - Why Register */}
-          <BenefitsSection />
-
-          {/* 1 LITRO DE LEITE EM ALTA EVIDÊNCIA */}
-          <div className="scroll-mt-24" id="doacao-leite">
-            <MilkHighlightBanner pledgedCount={stats.milkPledgedLitres} />
-          </div>
-
-          {/* Event Details, Schedule, Location and Prizes */}
-          <EventDetails />
-
-          {/* Official Registration Form & Simulator */}
-          <RegistrationSection
-            onRegistrationSuccess={handleRegistrationSuccess}
-            kitsRemaining={stats.kitsRemaining}
-            totalRegistered={stats.total}
-          />
-
-          {/* FAQ Section */}
-          <FAQSection />
+        {/* 1 LITRO DE LEITE EM ALTA EVIDÊNCIA */}
+        <div className="scroll-mt-24" id="doacao-leite">
+          <MilkHighlightBanner pledgedCount={stats.milkPledgedLitres} />
         </div>
+
+        {/* Event Details, Schedule, Location and Prizes */}
+        <EventDetails />
+
+        {/* Official Registration Form & Simulator */}
+        <RegistrationSection
+          onRegistrationSuccess={handleRegistrationSuccess}
+          kitsRemaining={stats.kitsRemaining}
+          totalRegistered={stats.total}
+        />
       </main>
 
       {/* Footer */}
@@ -148,12 +153,6 @@ export default function App() {
       {isNetlifyGuideOpen && (
         <NetlifyDeployGuideModal onClose={() => setIsNetlifyGuideOpen(false)} />
       )}
-
-      {/* WhatsApp Button - Floating */}
-      <WhatsAppButton
-        phoneNumber="5519987654321"
-        message="Olá! Gostaria de saber mais sobre o Treinão Solidário Alcateia 2026 🐺"
-      />
     </div>
   );
 }
