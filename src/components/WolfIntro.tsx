@@ -12,22 +12,22 @@ export const WolfIntro: React.FC<WolfIntroProps> = ({ onComplete }) => {
   const [progress, setProgress] = useState<number>(0);
 
   useEffect(() => {
-    // Progress timer
+    // Progress timer - slower for longer intro
     const interval = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 100) {
           clearInterval(interval);
           return 100;
         }
-        return prev + 1.25;
+        return prev + 0.83; // Slower progression
       });
-    }, 45);
+    }, 50); // Increased interval for smoother slower progress
 
-    const t1 = setTimeout(() => setPhase(2), 1200);
-    const t2 = setTimeout(() => setPhase(3), 2400);
+    const t1 = setTimeout(() => setPhase(2), 2400); // Increased from 1200ms
+    const t2 = setTimeout(() => setPhase(3), 4800); // Increased from 2400ms
     const t3 = setTimeout(() => {
       onComplete();
-    }, 4000);
+    }, 7200); // Increased from 4000ms - 7.2 seconds total
 
     return () => {
       clearInterval(interval);
@@ -73,7 +73,7 @@ export const WolfIntro: React.FC<WolfIntroProps> = ({ onComplete }) => {
         <motion.div
           initial={{ x: '-100%', opacity: 0 }}
           animate={{ x: '120%', opacity: [0, 1, 1, 0] }}
-          transition={{ duration: 3.0, repeat: Infinity, ease: 'easeInOut' }}
+          transition={{ duration: 4.0, repeat: Infinity, ease: 'easeInOut' }}
           className="absolute h-1.5 w-96 bg-gradient-to-r from-transparent via-[#E51E2B] to-rose-400 blur-[1px]"
           style={{ top: '65%' }}
         />
@@ -82,7 +82,7 @@ export const WolfIntro: React.FC<WolfIntroProps> = ({ onComplete }) => {
         <motion.div
           initial={{ x: -260, scale: 0.85 }}
           animate={{ x: [-200, 0, 30], scale: [0.85, 1.08, 1] }}
-          transition={{ duration: 2.8, ease: 'easeOut' }}
+          transition={{ duration: 3.8, ease: 'easeOut' }}
           className="relative flex items-center gap-4 z-10"
         >
           {/* Official Animated Logo Graphic */}

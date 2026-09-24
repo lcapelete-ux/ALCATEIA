@@ -11,7 +11,6 @@ import { MilkHighlightBanner } from './components/MilkHighlightBanner';
 import { EventDetails } from './components/EventDetails';
 import { RegistrationSection } from './components/RegistrationSection';
 import { AdminArea } from './components/AdminArea';
-import { NetlifyDeployGuideModal } from './components/NetlifyDeployGuideModal';
 import { WolfIntro } from './components/WolfIntro';
 import { RedWolfBackground } from './components/RedWolfBackground';
 import { Footer } from './components/Footer';
@@ -20,11 +19,8 @@ import { FirebaseService } from './services/firebase';
 import { Participant, EventStats } from './types';
 
 export default function App() {
-  const [showIntro, setShowIntro] = useState<boolean>(() => {
-    // Show intro once per session or on demand
-    const hasSeen = sessionStorage.getItem('alcateia_intro_seen');
-    return !hasSeen;
-  });
+  // Always show intro at the top - removed conditional logic
+  const [showIntro, setShowIntro] = useState<boolean>(true);
 
   const [participants, setParticipants] = useState<Participant[]>([]);
   const [stats, setStats] = useState<EventStats>({
@@ -41,7 +37,6 @@ export default function App() {
   });
 
   const [isAdminOpen, setIsAdminOpen] = useState<boolean>(false);
-  const [isNetlifyGuideOpen, setIsNetlifyGuideOpen] = useState<boolean>(false);
 
   // Load participants and stats from persistent storage
   const refreshData = useCallback(() => {
@@ -76,11 +71,6 @@ export default function App() {
 
   const handleIntroComplete = () => {
     setShowIntro(false);
-    sessionStorage.setItem('alcateia_intro_seen', 'true');
-  };
-
-  const handleReplayIntro = () => {
-    setShowIntro(true);
   };
 
   const handleRegistrationSuccess = (newAthlete: Participant) => {
@@ -101,8 +91,6 @@ export default function App() {
       <div className="relative z-10">
         <Navbar
           onOpenAdmin={() => setIsAdminOpen(true)}
-          onReplayIntro={handleReplayIntro}
-          onOpenNetlifyGuide={() => setIsNetlifyGuideOpen(true)}
           registeredCount={stats.total}
         />
       </div>
@@ -135,7 +123,6 @@ export default function App() {
       <div className="relative z-10">
         <Footer
           onOpenAdmin={() => setIsAdminOpen(true)}
-          onOpenNetlifyGuide={() => setIsNetlifyGuideOpen(true)}
         />
       </div>
 
@@ -147,11 +134,6 @@ export default function App() {
           onDataChanged={refreshData}
           onClose={() => setIsAdminOpen(false)}
         />
-      )}
-
-      {/* Netlify Deploy Guide Modal */}
-      {isNetlifyGuideOpen && (
-        <NetlifyDeployGuideModal onClose={() => setIsNetlifyGuideOpen(false)} />
       )}
     </div>
   );

@@ -65,22 +65,19 @@ export const AdminArea: React.FC<AdminAreaProps> = ({
     paymentMethod: 'PIX' as const,
   });
 
-  const ADMIN_PASSWORD = 'alcateia2024';
+  // Password from environment variable or Firebase backend in production
+  const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || 'admin';
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (passwordInput === ADMIN_PASSWORD || passwordInput === 'admin' || passwordInput === 'alcateia') {
+    if (passwordInput === ADMIN_PASSWORD) {
       setIsAuthenticated(true);
       setLoginError('');
+      setPasswordInput(''); // Clear password from memory
     } else {
-      setLoginError('Senha incorreta. A senha padrão do organizador é "alcateia2024".');
+      setLoginError('Acesso negado. Senha incorreta.');
+      setPasswordInput(''); // Clear failed attempt
     }
-  };
-
-  const handleQuickDemoLogin = () => {
-    setPasswordInput(ADMIN_PASSWORD);
-    setIsAuthenticated(true);
-    setLoginError('');
   };
 
   const filteredParticipants = useMemo(() => {
@@ -270,14 +267,6 @@ export const AdminArea: React.FC<AdminAreaProps> = ({
                 className="w-full py-3.5 rounded-xl bg-gradient-to-r from-red-600 to-[#E51E2B] text-white font-sports font-black uppercase tracking-wider text-sm hover:brightness-110 cursor-pointer shadow-lg shadow-red-600/30"
               >
                 Entrar no Painel Admin
-              </button>
-
-              <button
-                type="button"
-                onClick={handleQuickDemoLogin}
-                className="text-xs text-red-400 hover:underline cursor-pointer pt-1 block mx-auto font-medium"
-              >
-                🔑 Clique aqui para preencher senha de teste (alcateia2024)
               </button>
             </form>
           </div>

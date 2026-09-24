@@ -1,13 +1,12 @@
 import React from 'react';
-import { Heart, MapPin, Milk, Lock, Cloud, Flame } from 'lucide-react';
+import { Heart, MapPin, Milk, Lock } from 'lucide-react';
 import runnerWolfEmblem from '../assets/images/runner_wolf_emblem_1790261682882.jpg';
 
 interface FooterProps {
   onOpenAdmin: () => void;
-  onOpenNetlifyGuide: () => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onOpenAdmin, onOpenNetlifyGuide }) => {
+export const Footer: React.FC<FooterProps> = ({ onOpenAdmin }) => {
   return (
     <footer className="mt-20 border-t border-red-900/30 bg-[#060608] pt-14 pb-12 text-xs text-slate-400">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-12">
@@ -84,15 +83,6 @@ export const Footer: React.FC<FooterProps> = ({ onOpenAdmin, onOpenNetlifyGuide 
                 >
                   <Lock className="w-3.5 h-3.5 text-[#E51E2B]" />
                   <span>Área Restrita do Admin (Excel/PDF)</span>
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={onOpenNetlifyGuide}
-                  className="flex items-center gap-1.5 text-slate-300 hover:text-white cursor-pointer transition-colors"
-                >
-                  <Cloud className="w-3.5 h-3.5 text-red-400" />
-                  <span>Instruções de Deploy no Netlify</span>
                 </button>
               </li>
               <li>

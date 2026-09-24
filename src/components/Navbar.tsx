@@ -1,18 +1,14 @@
 import React from 'react';
-import { Lock, Play, Cloud, Flame } from 'lucide-react';
+import { Lock, Flame } from 'lucide-react';
 import runnerWolfEmblem from '../assets/images/runner_wolf_emblem_1790261682882.jpg';
 
 interface NavbarProps {
   onOpenAdmin: () => void;
-  onReplayIntro: () => void;
-  onOpenNetlifyGuide: () => void;
   registeredCount: number;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
   onOpenAdmin,
-  onReplayIntro,
-  onOpenNetlifyGuide,
   registeredCount,
 }) => {
   return (
@@ -47,26 +43,6 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Navigation Actions */}
         <div className="flex items-center gap-2 sm:gap-3">
-          {/* Replay Intro Button */}
-          <button
-            onClick={onReplayIntro}
-            title="Assistir animação oficial"
-            className="hidden md:flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 hover:border-red-600/50 text-xs font-semibold cursor-pointer transition-colors"
-          >
-            <Play className="w-3.5 h-3.5 text-[#E51E2B] fill-[#E51E2B]" />
-            <span>Intro do Lobo</span>
-          </button>
-
-          {/* Netlify Guide Button */}
-          <button
-            onClick={onOpenNetlifyGuide}
-            title="Como publicar no Netlify"
-            className="hidden lg:flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 text-xs font-semibold cursor-pointer transition-colors"
-          >
-            <Cloud className="w-3.5 h-3.5 text-red-400" />
-            <span>Publicar no Netlify</span>
-          </button>
-
           {/* CTA Inscrição Quick Scroll */}
           <a
             href="#inscricao"
