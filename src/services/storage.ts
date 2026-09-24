@@ -1,7 +1,7 @@
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import { Participant, RegistrationFormData, EventStats } from '../types';
-import { FirebaseService } from './firebase';
+import { SupabaseService } from './supabase';
 
 const STORAGE_KEY = 'alcateia_treinao_novembro_azul_2024';
 const MAX_KITS = 150;
@@ -358,14 +358,14 @@ export const StorageService = {
     this.saveParticipants(updated);
 
     // Sync to Cloud Firestore asynchronously
-    FirebaseService.saveParticipant(newParticipant).catch((err) => {
-      console.warn('Could not sync new athlete to Firebase:', err);
+    SupabaseService.saveParticipant(newParticipant).catch((err) => {
+      console.warn('Could not sync new athlete to Supabase:', err);
     });
 
     return newParticipant;
   },
 
-  syncFromFirebase(remoteList: Participant[]): void {
+  syncFromSupabase(remoteList: Participant[]): void {
     if (remoteList && remoteList.length > 0) {
       this.saveParticipants(remoteList);
     }
@@ -377,8 +377,8 @@ export const StorageService = {
     this.saveParticipants(updated);
 
     // Sync to Cloud Firestore
-    FirebaseService.updateParticipant(id, updates).catch((err) => {
-      console.warn('Could not sync update to Firebase:', err);
+    SupabaseService.updateParticipant(id, updates).catch((err) => {
+      console.warn('Could not sync update to Supabase:', err);
     });
 
     return updated;
@@ -390,8 +390,8 @@ export const StorageService = {
     this.saveParticipants(updated);
 
     // Sync deletion to Cloud Firestore
-    FirebaseService.deleteParticipant(id).catch((err) => {
-      console.warn('Could not sync deletion to Firebase:', err);
+    SupabaseService.deleteParticipant(id).catch((err) => {
+      console.warn('Could not sync deletion to Supabase:', err);
     });
 
     return updated;
@@ -410,8 +410,8 @@ export const StorageService = {
     this.saveParticipants(updated);
 
     // Sync to Cloud Firestore
-    FirebaseService.updateParticipant(id, { milkDelivered: newStatus }).catch((err) => {
-      console.warn('Could not sync milk status to Firebase:', err);
+    SupabaseService.updateParticipant(id, { milkDelivered: newStatus }).catch((err) => {
+      console.warn('Could not sync milk status to Supabase:', err);
     });
 
     return updated;
@@ -430,8 +430,8 @@ export const StorageService = {
     this.saveParticipants(updated);
 
     // Sync to Cloud Firestore
-    FirebaseService.updateParticipant(id, { checkedIn: newStatus }).catch((err) => {
-      console.warn('Could not sync check-in to Firebase:', err);
+    SupabaseService.updateParticipant(id, { checkedIn: newStatus }).catch((err) => {
+      console.warn('Could not sync check-in to Supabase:', err);
     });
 
     return updated;
@@ -439,9 +439,9 @@ export const StorageService = {
 
   resetToDefault(): Participant[] {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(INITIAL_PARTICIPANTS));
-    // Seed to Cloud Firestore as well
-    FirebaseService.seedInitialData(INITIAL_PARTICIPANTS).catch((err) => {
-      console.warn('Could not reset Cloud Firestore:', err);
+    // Seed to Cloud Supabase as well
+    SupabaseService.seedInitialData(INITIAL_PARTICIPANTS).catch((err) => {
+      console.warn('Could not reset Cloud Supabase:', err);
     });
     return INITIAL_PARTICIPANTS;
   },

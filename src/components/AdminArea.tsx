@@ -65,7 +65,7 @@ export const AdminArea: React.FC<AdminAreaProps> = ({
     paymentMethod: 'PIX' as const,
   });
 
-  // Password from environment variable or Firebase backend in production
+  // Password from environment variable or Supabase backend authentication in production
   const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || 'admin';
 
   const handleLogin = (e: React.FormEvent) => {
@@ -182,11 +182,11 @@ export const AdminArea: React.FC<AdminAreaProps> = ({
                 </span>
                 <span className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-950 text-emerald-300 border border-emerald-500/40">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  Firebase Nuvem Ativo
+                  Supabase PostgreSQL Ativo
                 </span>
               </div>
               <p className="text-xs text-slate-400">
-                Banco de Dados Firebase Firestore em Tempo Real · Exportação Excel/PDF · Entrega de Leite e Kits
+                Banco de Dados Supabase PostgreSQL em Tempo Real · Exportação Excel/PDF · Entrega de Leite e Kits
               </p>
             </div>
           </div>

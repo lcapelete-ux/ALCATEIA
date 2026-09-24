@@ -15,7 +15,7 @@ import { WolfIntro } from './components/WolfIntro';
 import { RedWolfBackground } from './components/RedWolfBackground';
 import { Footer } from './components/Footer';
 import { StorageService } from './services/storage';
-import { FirebaseService } from './services/firebase';
+import { SupabaseService } from './services/supabase';
 import { Participant, EventStats } from './types';
 
 export default function App() {
@@ -50,16 +50,16 @@ export default function App() {
     // Initial local load for instantaneous UI rendering
     refreshData();
 
-    // Subscribe to live Firestore cloud database changes
-    const unsubscribe = FirebaseService.subscribeParticipants((remoteParticipants) => {
+    // Subscribe to live Supabase cloud database changes
+    const unsubscribe = SupabaseService.subscribeParticipants((remoteParticipants) => {
       if (remoteParticipants && remoteParticipants.length > 0) {
-        StorageService.syncFromFirebase(remoteParticipants);
+        StorageService.syncFromSupabase(remoteParticipants);
         refreshData();
       } else {
-        // If Firestore collection is empty, seed it with the initial participants
+        // If Supabase table is empty, seed it with the initial participants
         const localList = StorageService.getParticipants();
         if (localList.length > 0) {
-          FirebaseService.seedInitialData(localList).catch(console.error);
+          SupabaseService.seedInitialData(localList).catch(console.error);
         }
       }
     });
