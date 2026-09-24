@@ -28,10 +28,8 @@ const firebaseConfig = {
 // Initialize Firebase App
 const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
 
-// Initialize Cloud Firestore using the configured database ID
-export const db = firebaseConfig.firestoreDatabaseId
-  ? getFirestore(app, firebaseConfig.firestoreDatabaseId)
-  : getFirestore(app);
+// Initialize Cloud Firestore
+export const db = getFirestore(app);
 
 // Connection test as required by skill guidelines
 export async function testConnection() {
