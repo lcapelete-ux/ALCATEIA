@@ -72,7 +72,7 @@
     button.textContent = busy ? "Aguarde…" : originalText;
   }
 
-  document.querySelectorAll("#reg-cpf, #confirm-cpf, #admin-cpf-lookup").forEach((input) => input.addEventListener("input", () => maskCpfInput(input)));
+  document.querySelectorAll("#reg-cpf, #confirm-cpf, #pix-confirm-cpf, #admin-cpf-lookup").forEach((input) => input.addEventListener("input", () => maskCpfInput(input)));
   const birthdate = byId("reg-birthdate");
   if (birthdate) birthdate.max = "2026-11-08";
 
@@ -100,10 +100,17 @@
       });
       byId("pix-registration-number").textContent = result.bibnumber ? `Número de inscrição: ${result.bibnumber}` : "Sua inscrição foi registrada.";
       byId("kit-note").textContent = result.kitEligible ? "Você está entre os 150 primeiros inscritos: camiseta e medalha reservadas." : "A camiseta e a medalha são destinadas aos 150 primeiros inscritos.";
-      byId("pix-panel").hidden = false;
-      feedback(message, "Inscrição registrada. Faça o Pix para concluir.", "success");
-      byId("pix-panel").scrollIntoView({ behavior: "smooth", block: "center" });
+      const cpfInput = byId("pix-confirm-cpf");
+      cpfInput.value = cpf;
+      maskCpfInput(cpfInput);
+      feedback(byId("pix-confirm-feedback"));
+      feedback(message);
       registrationForm.reset();
+      registrationForm.hidden = true;
+      const panel = byId("pix-panel");
+      panel.hidden = false;
+      panel.scrollIntoView({ behavior: "smooth", block: "start" });
+      panel.focus({ preventScroll: true });
     } catch (error) {
       feedback(message, error.message || "Não foi possível concluir a inscrição agora. Tente novamente.", "error");
     } finally {
@@ -125,6 +132,30 @@
       selection.addRange(range);
       button.textContent = "Selecione e copie a chave";
     }
+  });
+
+  byId("pix-confirm-form").addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const message = byId("pix-confirm-feedback");
+    const button = byId("pix-confirm-button");
+    const cpf = digitsOnly(byId("pix-confirm-cpf").value);
+    if (!validCpf(cpf)) return feedback(message, "Confira o CPF digitado.", "error");
+    feedback(message);
+    setBusy(button, true, "Confirmar pagamento");
+    try {
+      const result = await api("confirm-payment", { cpf, payerName: null });
+      feedback(message, result.message, "success");
+    } catch (error) {
+      feedback(message, error.message || "Não foi possível enviar a confirmação agora.", "error");
+    } finally {
+      setBusy(button, false, "Confirmar pagamento");
+    }
+  });
+
+  byId("new-registration").addEventListener("click", () => {
+    byId("pix-panel").hidden = true;
+    registrationForm.hidden = false;
+    registrationForm.scrollIntoView({ behavior: "smooth", block: "start" });
   });
 
   byId("confirmation-form").addEventListener("submit", async (event) => {
