@@ -1,20 +1,12 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# Treinão Solidário Alcateia
 
-# Run and deploy your AI Studio app
+Site estático (index.html + app.js + images) hospedado no Netlify, com banco no Supabase.
 
-This contains everything you need to run your app locally.
+## Banco de dados (Supabase > SQL Editor)
+1. Rode `supabase/01_banco_completo.sql` (tabela, segurança e funções).
+2. Edite a senha em `supabase/02_usuario_admin.sql` e rode (cria/conserta o login do organizador).
 
-View your app in AI Studio: https://ai.studio/apps/df3c74e8-4626-4df9-81c6-0b1065552e53
+Login do painel: usuário `alcateia` + a senha definida no passo 2.
 
-## Run Locally
-
-**Prerequisites:**  Node.js
-
-
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## Netlify
+Sem build: publica a pasta raiz (`netlify.toml`).
