@@ -1,8 +1,8 @@
 -- =====================================================================
--- Copia as inscrições da tabela antiga "participants" para a nova
+-- Copia as inscricoes da tabela antiga "participants" para a nova
 -- "treinao_participants". Rode DEPOIS do 01_banco_completo.sql.
--- A tabela antiga NÃO é alterada nem apagada (fica como backup).
--- Pode rodar de novo: CPFs já copiados são ignorados.
+-- A tabela antiga NAO e alterada nem apagada (fica como backup).
+-- Pode rodar de novo: CPFs ja copiados sao ignorados.
 -- Funciona com colunas em qualquer formato (fullName, fullname, full_name...).
 -- =====================================================================
 do $$
@@ -64,7 +64,7 @@ begin
 end;
 $$;
 
--- Conferência: antiga x nova
+-- Conferencia: antiga x nova
 select 'antiga' as tabela, count(*) from public.participants
 union all
 select 'nova', count(*) from public.treinao_participants;

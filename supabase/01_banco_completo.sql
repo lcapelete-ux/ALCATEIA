@@ -1,10 +1,10 @@
 -- =====================================================================
--- Treinão Solidário Alcateia — banco de dados completo
+-- Treinao Solidario Alcateia  banco de dados completo
 -- Rode este arquivo INTEIRO no Supabase: SQL Editor > New query > Run.
--- Pode rodar mais de uma vez sem problema (não apaga inscrições).
+-- Pode rodar mais de uma vez sem problema (nao apaga inscricoes).
 -- =====================================================================
 
--- ---------- Tabela de inscrições ----------
+-- ---------- Tabela de inscricoes ----------
 create table if not exists public.treinao_participants (
   id                 uuid primary key default gen_random_uuid(),
   bibnumber          integer not null unique,
@@ -24,12 +24,12 @@ create table if not exists public.treinao_participants (
   created_at         timestamptz not null default now()
 );
 
--- Sem políticas = ninguém acessa a tabela direto pela internet.
--- Todo acesso passa pelas funções abaixo, que validam tudo.
+-- Sem politicas = ninguem acessa a tabela direto pela internet.
+-- Todo acesso passa pelas funcoes abaixo, que validam tudo.
 alter table public.treinao_participants enable row level security;
 revoke all on public.treinao_participants from anon, authenticated;
 
--- ---------- Quem é organizador ----------
+-- ---------- Quem e organizador ----------
 create table if not exists public.treinao_admins (
   email text primary key
 );
@@ -59,7 +59,7 @@ begin
 end;
 $$;
 
--- ---------- Inscrição (público) ----------
+-- ---------- Inscricao (publico) ----------
 create or replace function public.treinao_register(
   p_fullname text,
   p_cpf text,
@@ -94,7 +94,6 @@ begin
     raise exception 'Este CPF já está inscrito. Se já pagou, use a confirmação de Pix.';
   end if;
 
-  -- trava para dois inscritos simultâneos não pegarem o mesmo número
   perform pg_advisory_xact_lock(20261108);
   v_bib := (select coalesce(max(bibnumber), 0) + 1 from treinao_participants);
 
@@ -108,7 +107,7 @@ begin
 end;
 $$;
 
--- ---------- Corredor informa que pagou o Pix (público) ----------
+-- ---------- Corredor informa que pagou o Pix (publico) ----------
 create or replace function public.treinao_confirm_payment(p_cpf text, p_payer_name text)
 returns json
 language plpgsql
@@ -205,7 +204,7 @@ begin
 end;
 $$;
 
--- ---------- Permissões ----------
+-- ---------- Permissoes ----------
 revoke all on function public.treinao_require_admin() from public, anon, authenticated;
 revoke all on function public.treinao_register(text, text, text, date, text, text, boolean) from public;
 revoke all on function public.treinao_confirm_payment(text, text) from public;
@@ -219,5 +218,5 @@ grant execute on function public.treinao_admin_list() to authenticated;
 grant execute on function public.treinao_admin_check_payment(text) to authenticated;
 grant execute on function public.treinao_admin_mark_paid(uuid) to authenticated;
 
--- Faz a API enxergar as funções novas na hora
+-- Faz a API enxergar as funcoes novas na hora
 notify pgrst, 'reload schema';

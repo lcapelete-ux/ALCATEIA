@@ -1,9 +1,9 @@
 -- =====================================================================
 -- Cria (ou conserta) o login do organizador.
--- 1) Troque COLOQUE_SUA_SENHA_AQUI pela senha que você quer usar.
+-- 1) Troque COLOQUE_SUA_SENHA_AQUI pela senha que voce quer usar.
 -- 2) Rode no SQL Editor.
--- No site: usuário "alcateia" + essa senha.
--- Se o usuário já existir, a senha é redefinida e o e-mail é confirmado.
+-- No site: usuario "alcateia" + essa senha.
+-- Se o usuario ja existir, a senha e redefinida e o e-mail e confirmado.
 -- =====================================================================
 do $$
 declare
@@ -49,6 +49,6 @@ begin
 end;
 $$;
 
--- Conferência: deve mostrar 1 linha com email_confirmed_at preenchido
+-- Conferencia: deve mostrar 1 linha com email_confirmed_at preenchido
 select email, email_confirmed_at, last_sign_in_at from auth.users
  where email = 'lcapelete+alcateia@gmail.com';
