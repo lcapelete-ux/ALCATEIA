@@ -26,7 +26,7 @@ begin
 
       v_bib := nullif(coalesce(r->>'bibnumber', r->>'bibNumber', r->>'bib_number'), '')::integer;
       if v_bib is null or exists (select 1 from public.treinao_participants where bibnumber = v_bib) then
-        select coalesce(max(bibnumber), 0) + 1 into v_bib from public.treinao_participants;
+        v_bib := (select coalesce(max(bibnumber), 0) + 1 from public.treinao_participants);
       end if;
 
       v_status := coalesce(r->>'paymentstatus', r->>'paymentStatus', r->>'payment_status', '');

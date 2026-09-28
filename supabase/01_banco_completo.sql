@@ -96,7 +96,7 @@ begin
 
   -- trava para dois inscritos simultâneos não pegarem o mesmo número
   perform pg_advisory_xact_lock(20261108);
-  select coalesce(max(bibnumber), 0) + 1 into v_bib from treinao_participants;
+  v_bib := (select coalesce(max(bibnumber), 0) + 1 from treinao_participants);
 
   insert into treinao_participants
     (bibnumber, fullname, cpf, gender, birthdate, team, city, consent, kit_eligible)
@@ -119,8 +119,8 @@ declare
   v_cpf text := regexp_replace(coalesce(p_cpf, ''), '\D', '', 'g');
   v_status text;
 begin
-  select paymentstatus into v_status from treinao_participants where cpf = v_cpf;
-  if not found then
+  v_status := (select paymentstatus from treinao_participants where cpf = v_cpf);
+  if v_status is null then
     raise exception 'Não encontramos inscrição com esse CPF.';
   end if;
   if v_status = 'Pago' then
@@ -174,9 +174,9 @@ declare
   v_row treinao_participants;
 begin
   perform treinao_require_admin();
-  select * into v_row from treinao_participants
-   where cpf = regexp_replace(coalesce(p_cpf, ''), '\D', '', 'g');
-  if not found then
+  v_row := (select t from treinao_participants t
+             where t.cpf = regexp_replace(coalesce(p_cpf, ''), '\D', '', 'g'));
+  if v_row.id is null then
     return json_build_object('found', false);
   end if;
   return json_build_object(

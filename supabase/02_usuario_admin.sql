@@ -15,7 +15,7 @@ begin
     raise exception 'Troque a senha na linha v_password (mínimo 8 caracteres).';
   end if;
 
-  select id into v_id from auth.users where email = v_email;
+  v_id := (select id from auth.users where email = v_email);
 
   if v_id is null then
     v_id := gen_random_uuid();
