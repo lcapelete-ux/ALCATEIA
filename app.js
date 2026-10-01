@@ -9,6 +9,7 @@
     "admin-list": () => ["treinao_admin_list", {}],
     "admin-check-payment-claim": (p) => ["treinao_admin_check_payment", { p_cpf: p.cpf }],
     "mark-paid": (p) => ["treinao_admin_mark_paid", { p_participant_id: p.participantId }],
+    "set-status": (p) => ["treinao_admin_set_status", { p_participant_id: p.participantId, p_status: p.status }],
   };
   const PIX_KEY = "garpelli15@gmail.com";
   const ADMIN_EMAIL = "lcapelete+alcateia@gmail.com";
@@ -314,8 +315,10 @@
     } else {
       body.innerHTML = visible.map((row) => {
         const status = String(row.paymentstatus || "Pendente");
-        const canMark = status === "Aguardando conferência";
-        return `<tr><td>${esc(row.bibnumber)}</td><td>${esc(row.fullname)}</td><td>${esc(row.cpf_masked)}</td><td>${esc(row.gender)}<br>${esc(formatDate(row.birthdate))}</td><td>${esc(row.team)}<br>${esc(row.city)}</td><td>${esc(row.payer_name || "—")}</td><td><span class="status-badge ${statusClass(status)}">${esc(status)}</span></td><td>${canMark ? `<button class="mark-paid" type="button" data-paid-id="${esc(row.id)}">Marcar pago</button>` : "—"}</td></tr>`;
+        const action = status === "Pago"
+          ? `<button class="unmark-paid" type="button" data-unpaid-id="${esc(row.id)}">Desmarcar</button>`
+          : `<button class="mark-paid" type="button" data-paid-id="${esc(row.id)}">Marcar pago</button>`;
+        return `<tr><td>${esc(row.bibnumber)}</td><td>${esc(row.fullname)}</td><td>${esc(row.cpf_masked)}</td><td>${esc(row.gender)}<br>${esc(formatDate(row.birthdate))}</td><td>${esc(row.team)}<br>${esc(row.city)}</td><td>${esc(row.payer_name || "—")}</td><td><span class="status-badge ${statusClass(status)}">${esc(status)}</span></td><td>${action}</td></tr>`;
       }).join("");
     }
     byId("stat-total").textContent = String(allParticipants.length);
@@ -366,16 +369,24 @@
   });
 
   byId("participants-body").addEventListener("click", async (event) => {
-    const button = event.target.closest("[data-paid-id]");
+    const button = event.target.closest("[data-paid-id], [data-unpaid-id]");
     if (!button) return;
     const message = byId("dashboard-feedback");
+    const unmark = Boolean(button.dataset.unpaidId);
+    if (unmark && !window.confirm("Desmarcar o pagamento desta inscrição? Ela volta para Pendente.")) return;
     button.disabled = true;
     try {
-      await adminApi("mark-paid", { participantId: button.dataset.paidId });
-      feedback(message, "Pagamento confirmado.", "success");
+      if (unmark) {
+        await adminApi("set-status", { participantId: button.dataset.unpaidId, status: "Pendente" });
+        feedback(message, "Pagamento desmarcado. A inscrição voltou para Pendente.", "success");
+      } else {
+        await adminApi("mark-paid", { participantId: button.dataset.paidId });
+        feedback(message, "Pagamento confirmado.", "success");
+      }
       await loadDashboard();
     } catch (error) {
-      feedback(message, error.message || "Não foi possível confirmar este pagamento.", "error");
+      const missing = /treinao_admin_set_status|schema cache|Could not find the function/i.test(error.message || "");
+      feedback(message, missing ? "Para desmarcar, rode o arquivo supabase/04_admin_alterar_status.sql no Supabase." : (error.message || "Não foi possível alterar este pagamento."), "error");
       button.disabled = false;
     }
   });
